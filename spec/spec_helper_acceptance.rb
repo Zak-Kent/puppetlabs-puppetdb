@@ -17,11 +17,11 @@ def build_url(platform)
       raise "build_url() called with unsupported platform '#{platform}'"
     end
   else
-    url5 = 'http://%{mngr}.puppetlabs.com/%{dir}puppet5-release%{plat}'
+    url6 = 'http://%{mngr}.puppetlabs.com/%{dir}puppet6-release%{plat}'
     case platform
-    when 'el' then url5 % { mngr: 'yum', dir: 'puppet5/', plat: '-el-' }
-    when 'fedora' then url5 % { mngr: 'yum', dir: 'puppet5/', plat: '-fedora-' }
-    when 'debian', 'ubuntu' then url5 % { mngr: 'apt', dir: '', plat: '-' }
+    when 'el' then url6 % { mngr: 'yum', dir: 'puppet6/', plat: '-el-' }
+    when 'fedora' then url6 % { mngr: 'yum', dir: 'puppet6/', plat: '-fedora-' }
+    when 'debian', 'ubuntu' then url6 % { mngr: 'apt', dir: '', plat: '-' }
     else
       raise "build_url() called with unsupported platform '#{platform}'"
     end
@@ -58,7 +58,7 @@ hosts.each do |host|
     if use_puppet4?
       on host, 'dpkg -i puppetlabs-release-pc1-$(lsb_release -c -s).deb'
     else
-      on host, 'dpkg -i puppet5-release-$(lsb_release -c -s).deb'
+      on host, 'dpkg -i puppet6-release-$(lsb_release -c -s).deb'
     end
     on host, 'apt-get -y -m update'
     on host, 'apt-get install -y puppetserver'
