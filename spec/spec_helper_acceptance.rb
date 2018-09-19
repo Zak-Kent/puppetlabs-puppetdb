@@ -6,6 +6,10 @@ def use_puppet4?
   (ENV['PUPPET_INSTALL_VERSION'] =~ %r{^2016}) ? true : false
 end
 
+def use_puppet5?
+  (ENV['PUPPET_INSTALL_VERSION'] =~ %r{(^2017|^2018)}) ? true : false
+end
+
 def build_url(platform)
   if use_puppet4?
     url4 = 'http://%{mngr}.puppetlabs.com/puppetlabs-release-pc1%{plat}'
@@ -13,6 +17,15 @@ def build_url(platform)
     when 'el' then url4 % { mngr: 'yum', plat: '-el-' }
     when 'fedora' then url4 % { mngr: 'yum', plat: '-fedora-' }
     when 'debian', 'ubuntu' then url4 % { mngr: 'apt', plat: '-' }
+    else
+      raise "build_url() called with unsupported platform '#{platform}'"
+    end
+  elsif use_puppet5?
+    url5 = 'http://%{mngr}.puppetlabs.com/%{dir}puppet5-release%{plat}'
+    case platform
+    when 'el' then url5 % { mngr: 'yum', dir: 'puppet5/', plat: '-el-' }
+    when 'fedora' then url5 % { mngr: 'yum', dir: 'puppet5/', plat: '-fedora-' }
+    when 'debian', 'ubuntu' then url5 % { mngr: 'apt', dir: '', plat: '-' }
     else
       raise "build_url() called with unsupported platform '#{platform}'"
     end
@@ -57,6 +70,8 @@ hosts.each do |host|
     on host, "curl -O #{build_url('debian')}$(lsb_release -c -s).deb"
     if use_puppet4?
       on host, 'dpkg -i puppetlabs-release-pc1-$(lsb_release -c -s).deb'
+    elsif use_puppet5?
+      on host, 'dpkg -i puppet5-release-$(lsb_release -c -s).deb'
     else
       on host, 'dpkg -i puppet6-release-$(lsb_release -c -s).deb'
     end
