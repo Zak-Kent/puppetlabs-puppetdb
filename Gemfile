@@ -61,11 +61,12 @@ if Gem.win_platform? && puppet_version =~ %r{^(file:///|git://)}
 end
 
 group :system_tests do
-  gem 'beaker',                       :require => false
-  gem 'beaker-pe',                    :require => false
-  gem 'beaker-rspec',                 :require => false
-  gem 'beaker-puppet_install_helper', :require => false
-  gem 'beaker-module_install_helper', :require => false
+  # gem 'beaker',                       :require => false
+  # gem 'beaker-pe',                    :require => false
+  # gem 'beaker-rspec',                 :require => false
+  # gem 'beaker-puppet_install_helper', :require => false
+  # gem 'beaker-module_install_helper', :require => false
+  gem "puppet-module-posix-system-r#{minor_version}"
   gem 'nokogiri',                     :require => false
   gem 'serverspec',                   :require => false
 end
